@@ -894,11 +894,9 @@ std::int64_t APS5_VABI _ZN7WebCore15SQLiteStatement14getColumnInt64Ei(SQLiteStat
 String APS5_VABI _ZN7WebCore15SQLiteStatement21getColumnBlobAsStringEi(SQLiteStatement* self, int col) {
     auto& statement = Checked(self);
     if (!HasColumn(statement, col)) return String();
-    const void* blob = sqlite3_column_blob_nid_postfix(statement.statement, col);
-    if (!blob) return String(NKWebKit::WtfAbi::EmptyStringImpl());
-    const int size = sqlite3_column_bytes_nid_postfix(statement.statement, col);
-    if (size < 0) return String();
-    return FromCharacters(static_cast<const char16_t*>(blob), static_cast<unsigned>(size / sizeof(char16_t)));
+    const auto* text = static_cast<const char16_t*>(sqlite3_column_text16_nid_postfix(statement.statement, col));
+    const auto bytes = sqlite3_column_bytes16_nid_postfix(statement.statement, col);
+    return FromCharacters(text, static_cast<unsigned>(bytes / sizeof(char16_t)));
 }
 
 void APS5_VABI _ZN7WebCore15SQLiteStatement21getColumnBlobAsVectorEiRN3WTF6VectorIcLm0ENS1_15CrashOnOverflowELm16ENS1_10FastMallocEEE(

@@ -1,9 +1,9 @@
-from pathlib import Path
 import platform
 import struct
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 from test_guest_intel_trampolines import main_fixture, pe_sections
 from test_guest_module_directories import module_with_symbol
@@ -392,7 +392,7 @@ def main():
             for system in systems:
                 result, artifacts, output = convert_modules(f"{sce}-valid", system, {name: image for name, image, *_ in cases})
                 assert result.returncode == 0, (sce, system, result.stdout, result.stderr)
-                for name, image, rela, plt, initial, addend in cases:
+                for name, _image, rela, plt, initial, addend in cases:
                     artifact = artifacts / f"{name}.prx.guest.prx"
                     try:
                         check_output(artifact.read_bytes(), system, rela, plt, initial, addend=addend)
